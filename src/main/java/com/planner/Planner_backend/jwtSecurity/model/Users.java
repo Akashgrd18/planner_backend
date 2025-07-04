@@ -12,6 +12,7 @@ public class Users {
     private int id;
     private String username;
     private String password;
+    private String code ;
 
     public int getId() {
         return id;
@@ -37,12 +38,21 @@ public class Users {
         this.password = password;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public String toString() {
         return "Users{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", code='" + code + '\'' +
                 '}';
     }
 }

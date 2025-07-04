@@ -4,6 +4,9 @@ import com.planner.Planner_backend.jwtSecurity.model.Users;
 import com.planner.Planner_backend.jwtSecurity.service.JwtService;
 import com.planner.Planner_backend.jwtSecurity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "*")
 public class UserController {
+
 
 	@Autowired
 	private UserService service;
@@ -23,6 +27,11 @@ public class UserController {
 	AuthenticationManager authenticationManager;
 
 
+	@Value("${secret.code}")
+	private String expectedSecretCode;
+
+
+
 
 	@RequestMapping("/hello")
 	public String greet(){
@@ -30,9 +39,15 @@ public class UserController {
 	}
 
 	@PostMapping("/register")
-	public Users register(@RequestBody Users user) {
+	public ResponseEntity<?> register(@RequestBody Users user) {
+		if (!expectedSecretCode.equals(user.getCode())) {
+			return ResponseEntity
+					.status(HttpStatus.FORBIDDEN)
+					.body(expectedSecretCode);
+		}
+		Users savedUser = service.saveUser(user);
+		return ResponseEntity.ok(savedUser);
 
-		return service.saveUser(user);
 	}
 
 	@PostMapping("login")
