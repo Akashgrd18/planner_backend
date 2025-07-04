@@ -30,9 +30,6 @@ public class UserController {
 	@Value("${secret.code}")
 	private String expectedSecretCode;
 
-
-
-
 	@RequestMapping("/hello")
 	public String greet(){
 		return "hello";
@@ -43,7 +40,7 @@ public class UserController {
 		if (!expectedSecretCode.equals(user.getCode())) {
 			return ResponseEntity
 					.status(HttpStatus.FORBIDDEN)
-					.body(expectedSecretCode);
+					.body("Code is incorrect");
 		}
 		Users savedUser = service.saveUser(user);
 		return ResponseEntity.ok(savedUser);
